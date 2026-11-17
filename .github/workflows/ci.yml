@@ -1,0 +1,129 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  # No branch filter: stacked PRs (e.g. one branch based on another, not on
+  # main) still need CI to run against their actual base branch.
+  pull_request: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ["20", "22"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run eslint
+        run: npm run lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tsc
+        run: npm run typecheck
+
+  # Patch/diff coverage: fails if newly added or changed lines in the PR
+  # aren't exercised by tests. Only meaningful with a PR base to diff
+  # against, so it doesn't run on direct pushes to main.
+  coverage:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set up Python (for diff-cover)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install diff-cover
+        run: pip install diff-cover
+
+      - name: Fetch PR base branch
+        run: git fetch origin ${{ github.event.pull_request.base.ref }}
+
+      - name: Run tests with coverage
+        run: npm run test:coverage -- --coverage.reporter=lcov
+
+      - name: Check diff coverage
+        run: >
+          diff-cover coverage/lcov.info
+          --compare-branch=origin/${{ github.event.pull_request.base.ref }}
+          --fail-under=80
+
+  # Single required status check, independent of the jobs above.
+  ci-success:
+    needs: [test, lint, typecheck, coverage]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check job results
+        run: |
+          if [ "${{ needs.test.result }}" != "success" ]; then
+            echo "Test job did not succeed: ${{ needs.test.result }}"
+            exit 1
+          fi
+          if [ "${{ needs.lint.result }}" != "success" ]; then
+            echo "Lint job did not succeed: ${{ needs.lint.result }}"
+            exit 1
+          fi
+          if [ "${{ needs.typecheck.result }}" != "success" ]; then
+            echo "Typecheck job did not succeed: ${{ needs.typecheck.result }}"
+            exit 1
+          fi
+          if [ "${{ github.event_name }}" == "pull_request" ] && [ "${{ needs.coverage.result }}" != "success" ]; then
+            echo "Coverage job did not succeed: ${{ needs.coverage.result }}"
+            exit 1
+          fi
