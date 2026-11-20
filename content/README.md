@@ -63,4 +63,4 @@ with the real names and owners.
 | Founder | Ciarán | | | | |
 | Startup | Óran | | | | |
 | MNC | Peter K. | | | | |
-| Not-for-Profit | Hugh F. | | | | |
+| Not-for-Profit | Hugh F. | Not-for-Profit Economics and Sustainable Software (Eoin) | | | |
