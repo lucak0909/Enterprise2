@@ -2,9 +2,9 @@
 title: "Ethics"
 path: mnc
 topic_order: 4
-author: "Add your name"
+author: "Sreejita Saha"
 status: draft
-ai_use: "ChatGPT helped research, structure and draft this section."
+ai_use: "ChatGPT was used to support drafting, structuring and refining the wording of this section through an iterative process."
 ---
 
 ## Introduction
@@ -196,7 +196,7 @@ Copy these questions into a project ticket or discuss them at a team meeting:
 
 ## Declaration of Generative AI and AI-assisted technologies in the writing process
 
-ChatGPT was used to help research, structure and draft this section in simple English. The author should review the content and sources, make their own changes and update this statement so it accurately describes their use before submission. The group should place the final declaration immediately above the references in the full submission, as required by the brief.
+ChatGPT was used to assist with drafting and improving the structure and wording of this section. The content was refined and reviewed by the author.
 
 ## References
 
