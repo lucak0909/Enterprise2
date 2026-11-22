@@ -115,9 +115,8 @@ check for product-market fit.
 
 ## Exercise
 
-Your trio from Contract Negotiations (the Builder, the Connector and the Part-Timer) has
-built **ShiftSwap**, an app that lets part-time hospitality staff swap shifts without
-having to go through a 50-message WhatsApp group.
+Your group has built **ShiftSwap**, an app that lets part-time hospitality staff swap
+shifts without having to go through a 50-message WhatsApp group.
 
 1. Write out the problem in one sentence. Whose problem is it and how are they dealing
    with it right now?
@@ -130,8 +129,8 @@ having to go through a 50-message WhatsApp group.
 6. Try your questions in the **Customer Interview Simulator** below. How much real
    evidence did you get, and how many false positives?
 
-Compare your answers with a partner and see whose beachhead is narrower. Usually the
-narrower one wins.
+Compare your answers with another group and see whose beachhead is narrower. Usually
+the narrower one wins.
 
 ## Interactive Element (optional)
 
