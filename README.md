@@ -21,6 +21,7 @@ a page automatically — no manual wiring needed when someone adds or edits a se
 
 - **Writing a section?** See [`content/README.md`](content/README.md).
 - **Working on the site itself?** See below.
+- **Checking accessibility?** Use the [website accessibility checklist](docs/accessibility-checklist.md).
 
 ## Development
 
