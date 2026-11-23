@@ -63,6 +63,23 @@ jobs:
       - name: Run tsc
         run: npm run typecheck
 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run next build
+        run: npm run build
+
   # Patch/diff coverage: fails if newly added or changed lines in the PR
   # aren't exercised by tests. Only meaningful with a PR base to diff
   # against, so it doesn't run on direct pushes to main.
@@ -105,7 +122,7 @@ jobs:
 
   # Single required status check, independent of the jobs above.
   ci-success:
-    needs: [test, lint, typecheck, coverage]
+    needs: [test, lint, typecheck, build, coverage]
     runs-on: ubuntu-latest
     if: always()
     steps:
@@ -121,6 +138,10 @@ jobs:
           fi
           if [ "${{ needs.typecheck.result }}" != "success" ]; then
             echo "Typecheck job did not succeed: ${{ needs.typecheck.result }}"
+            exit 1
+          fi
+          if [ "${{ needs.build.result }}" != "success" ]; then
+            echo "Build job did not succeed: ${{ needs.build.result }}"
             exit 1
           fi
           if [ "${{ github.event_name }}" == "pull_request" ] && [ "${{ needs.coverage.result }}" != "success" ]; then
