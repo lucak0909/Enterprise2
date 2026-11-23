@@ -22,20 +22,35 @@ a page automatically — no manual wiring needed when someone adds or edits a se
 - **Writing a section?** See [`content/README.md`](content/README.md).
 - **Working on the site itself?** See below.
 
-## Development
+## Running the website
 
 ```
 npm install
-npm run dev          # run the site locally at http://localhost:3000
-npm run build         # production build (also run in CI)
+npm run dev
+```
+
+Then open **http://localhost:3000**. Pages update automatically as you edit files under
+`content/` or `app/` — no restart needed.
+
+Routes: `/` (all paths), `/<path>` (a path's home page + topic list), `/<path>/<topic>`
+(one topic). Path and topic slugs come directly from the `content/` folder names, so a
+new or renamed section shows up with no code changes.
+
+To check a production build instead of the dev server:
+
+```
+npm run build
+npm run start
+```
+
+## Development
+
+```
 npm run lint          # eslint
 npm run typecheck     # tsc --noEmit
 npm test              # vitest
 npm run test:coverage
 ```
-
-Routes: `/` (all paths), `/<path>` (a path's home page + topic list), `/<path>/<topic>`
-(one topic). Path and topic slugs come directly from the `content/` folder names.
 
 CI runs the same checks (plus a production build and PR diff-coverage) on every push to
 `main` and every PR — see `.github/workflows/ci.yml`.
