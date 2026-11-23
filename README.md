@@ -19,6 +19,7 @@ and never need to touch the app, and the web team builds the site around whateve
 
 - **Writing a section?** See [`content/README.md`](content/README.md).
 - **Working on the site itself?** See below.
+- **Checking accessibility?** Use the [website accessibility checklist](docs/accessibility-checklist.md).
 
 ## Development
 
