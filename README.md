@@ -9,29 +9,37 @@ Built for the Enterprise II module project. Deadline: **Dec 13, 2026**.
 
 ```
 content/      <- All written sections live here. Writers: start with content/README.md.
-src/          <- App source (web team).
+app/          <- Next.js App Router pages (web team).
+lib/          <- Content-loading logic: reads frontmatter + markdown from content/.
 test/         <- Tests (web team).
 ```
 
 Content and app code are kept separate on purpose: writers edit Markdown in `content/`
-and never need to touch the app, and the web team builds the site around whatever's in
-`content/` without waiting on prose to be finalized.
+and never need to touch the app. The app reads straight from `content/` at build time
+(via `lib/content.ts`) and turns each path's `home.md` and each topic's `content.md` into
+a page automatically — no manual wiring needed when someone adds or edits a section.
 
 - **Writing a section?** See [`content/README.md`](content/README.md).
 - **Working on the site itself?** See below.
+- **Checking accessibility?** Use the [website accessibility checklist](docs/accessibility-checklist.md).
 
 ## Development
 
 ```
 npm install
-npm run lint        # eslint
-npm run typecheck    # tsc --noEmit
-npm test             # vitest
+npm run dev          # run the site locally at http://localhost:3000
+npm run build         # production build (also run in CI)
+npm run lint          # eslint
+npm run typecheck     # tsc --noEmit
+npm test              # vitest
 npm run test:coverage
 ```
 
-CI runs the same checks (plus PR diff-coverage) on every push to `main` and every PR —
-see `.github/workflows/ci.yml`.
+Routes: `/` (all paths), `/<path>` (a path's home page + topic list), `/<path>/<topic>`
+(one topic). Path and topic slugs come directly from the `content/` folder names.
+
+CI runs the same checks (plus a production build and PR diff-coverage) on every push to
+`main` and every PR — see `.github/workflows/ci.yml`.
 
 ## Team
 
