@@ -1,148 +1,146 @@
-# Ethics in Not-for-Profit and Research Organisations
+---
+title: "Ethics"
+path: not-for-profit
+topic_order: 1
+author: "Waleed"
+status: draft
+ai_use: "Paraphrasing"
+---
 
-Why Does Ethics Matter?
+## Introduction
 
-When developing software for a not-for-profit or healthcare organisation, success isn't always measured by revenue or the number of users. Often, the goal is to improve people's lives, support healthcare professionals, or make essential services more efficient.
+### Doing Good, Responsibly
 
-However, having good intentions doesn't automatically mean that every technical decision is ethical. Software engineers must consider how their systems affect people's privacy, safety and wellbeing. The ACM Code of Ethics highlights the responsibility of computing professionals to contribute to society, avoid harm and respect privacy (Association for Computing Machinery 2018).
+When developing software for a not-for-profit, research or healthcare organisation, success is not always measured by revenue or user growth. The goal might be to help someone receive appropriate care, make essential services more accessible or give professionals more time to focus on people instead of paperwork. That sense of purpose can make the work rewarding, but it does not make every technical decision automatically ethical.
 
-Patient Care vs Patient Privacy
+Imagine a hospital application that shows staff the information they need within seconds. That sounds like an improvement. Now imagine the same information is visible to an unauthorised visitor, or a record is out of date when a clinician needs it. The system can be useful and still cause harm.
 
-During my internship at the Rapid Innovation Unit, I worked on a patient bedside tablet application designed to make important patient information more accessible. This included medical conditions, dietary requirements and mobility needs, helping healthcare staff understand patients' individual care requirements.
+The **ACM Code of Ethics** asks computing professionals to contribute to society, avoid harm, be fair and respect privacy [1]. For software engineers working on services that people depend on, ethics cannot be a final checkbox before release. It needs to shape requirements, architecture, interface design, testing and day-to-day decisions.
 
-While making this information readily available could improve care, it also raises an ethical question: who should be allowed to see what?
+**By the end of this section, you should be able to** identify ethical risks in mission-driven software, explain competing responsibilities and justify practical safeguards using real engineering scenarios.
 
-For example, catering staff may need to know about a patient's food allergies, but would they need access to their entire medical history?
+## Key Concepts
 
-This relates to the principle of data minimisation, which encourages organisations to collect and use only the personal information necessary for a specific purpose. The Data Protection Commission (n.d.) emphasises incorporating privacy protections into systems from the beginning rather than treating them as an afterthought.
+### 1. Privacy, confidentiality and the need to know
 
-Interactive Activity 1 – Who Should Have Access?
+Patient information can include medical conditions, dietary requirements and mobility needs. Some details are essential for safe care, but not everyone needs access to everything. **Data minimisation** means limiting personal data to what is necessary for a defined purpose, while **privacy by design and by default** means considering those limits from the start [2]. The Irish Data Protection Commission also advises that staff access should reflect the data they need to perform their duties [3].
 
-Based on: Patient Bedside Tablet Application
-Format: Interactive role-based access simulator
+For developers, that can influence role permissions, what is visible on a shared screen, session timeouts, audit logs and how much information an interface reveals by default. Importantly, these decisions should be made with the hospital's authorised clinical and information-governance teams—not by developers guessing what each job title should see. Privacy also does not mean blocking information that a professional legitimately needs to provide safe care.
 
-Scenario
+### 2. Safety, accuracy and availability
 
-You're developing a bedside tablet application displaying a patient's medical conditions, dietary requirements and mobility needs. Different hospital staff need different information, but giving everyone full access could compromise patient privacy.
+We usually think about data security as keeping information secret. In healthcare, **integrity** and **availability** matter too. An allergy recorded incorrectly, an outdated assessment or an unavailable system could affect care even without a conventional data breach. The GDPR includes accuracy and security among its core data-protection principles [4].
 
-How It Works
+Engineering responses might include clear record timestamps, validation, traceable changes, sensible recovery procedures and a way to flag conflicting information for review. These are examples of safeguards to consider, not a claim that every healthcare application requires the same architecture. The central question is whether staff can rely on the right information at the right time.
 
-The reader selects a role: Doctor, Nurse, Catering Staff or Visitor.
+### 3. Fairness, accessibility and inclusion
 
-A fictional patient information screen appears with categories such as medical history, dietary requirements and mobility needs.
+A system can be secure and efficient yet still fail people who struggle to use it. Consider a digital pre-assessment form with confusing instructions, controls that cannot be used with a keyboard, or a process that assumes every patient is confident using technology. The result could be that some users complete it easily while others need additional help or are excluded.
 
-The reader selects which information their chosen role should access.
+Accessibility is therefore an ethical concern as well as a design concern. The W3C's **Web Content Accessibility Guidelines (WCAG) 2.2** provide practical guidance for making web content more accessible [5]. In mission-driven projects, involving the people who will actually use the service can reveal problems that a technically successful test may miss. Keeping an appropriate assisted or alternative route available may also matter, depending on the service.
 
-Clicking Check My Decision displays feedback explaining any privacy or patient-safety concerns.
+### 4. Ethical trade-offs: what should guide a decision?
 
-The reader can retry or choose another role.
+There is rarely a perfect option. A quick sign-in process may help staff access urgent information, but a poorly designed shortcut could expose private records. Two useful ways to reason about this are:
 
-Example Interaction
+- **Consequences:** What benefits and harms are likely for patients, staff and the wider service? Which groups carry the risks, and how serious could those risks be?
+- **Duties and rights:** What responsibilities must be respected even when a shortcut would save time—for example, confidentiality, honesty, fairness and professional care?
 
-Selected role: Catering Staff
+A third perspective is **care**: pay particular attention to people who may be vulnerable or dependent on the service. In practice, these perspectives work best together. A proposal should not be judged only by how many minutes it saves or only by whether it is technically possible.
 
-Reader's choice: Allow access to dietary requirements and full medical history.
+### 5. Accountability is part of the engineer's job
 
-Feedback:
+A developer might not have the final say over clinical policy or hosting arrangements, but that does not remove professional responsibility. If a requirement creates a foreseeable risk, the engineer should raise it, explain the trade-off, seek appropriate clinical and security input, and document the decision. The ACM Code places professional responsibility on computing practitioners even when decisions are difficult [1].
 
-"Good decision including dietary requirements, as catering staff need allergy information to prepare meals safely. However, full medical history is unnecessary for their responsibilities and could expose confidential patient information."
+A useful habit is to ask: **Who benefits? Who could be harmed? What do we still not know? Who has the authority and expertise to approve the risk?** These questions are especially important when tight budgets, urgent deadlines or pressure to innovate make a shortcut tempting.
 
-Key learning: Apply data minimisation and least-privilege principles while ensuring information needed for safe patient care remains accessible.
+## Case Study
 
-Web Team – Implementation
+The following examples draw on projects I worked on during my internship at the **Rapid Innovation Unit**. They describe the purpose of the projects and the ethical questions they raised for me. Where specific safeguards are discussed, they are proposed design considerations rather than claims about what was implemented or deployed.
 
-Use selectable role cards and information checkboxes.
+### Case Study 1: The patient bedside tablet — care versus confidentiality
 
-Display a mock bedside tablet with fictional patient information.
+One project involved a **patient bedside tablet application** intended to make important information more accessible. It included details such as medical conditions, dietary requirements and mobility needs, helping healthcare staff understand individual care requirements.
 
-Compare selections against predefined role-specific recommendations and show contextual feedback.
+This immediately raises a design dilemma. Making information easy to find can support better care; making *all* information easy for *everyone* to see can undermine patient privacy. For example, catering staff may need to know whether a patient has an allergy, but would normally have no reason to browse unrelated medical history. Likewise, a visitor being physically near the tablet does not automatically mean they are authorised to view confidential records.
 
-Include Try Again and Choose Another Role buttons.
+As a software engineer, I would begin by separating **what information exists** from **what each user needs for a particular task**. A possible design might use role-appropriate views, an appropriately protected screen when unattended, and a process for authorised access in situations where clinical needs change. These choices would need review by the relevant hospital teams, because a simplistic restriction could also prevent someone from providing safe care.
 
-This can be implemented using a reusable React component and local state, without a backend.
+This example illustrates a wider ethical point: **a more convenient interface is not necessarily a better interface unless it protects the people whose information it displays.**
 
-Innovation vs Responsibility
+### Case Study 2: GyneConnect — efficiency versus reliability and trust
 
-Another project I worked on was GyneConnect, a digital pre-assessment form application for gynaecological surgery.
+Another project was **GyneConnect**, a digital pre-assessment form application for gynaecological surgery. Hospital staff explained that paper documents could be misplaced and that collecting signatures and approvals across departments took time. The aim was to centralise the process so documentation would be easier to manage and administrative work could move more efficiently.
 
-Hospital staff described how paper-based documentation could be misplaced and how obtaining signatures and approvals across different departments was time-consuming. GyneConnect aimed to centralise this process, making documentation easier to manage and reducing unnecessary administrative work.
+Listening to staff was important: it revealed real problems that would not be obvious from a list of technical requirements alone. But turning a paper workflow into a digital one also changes the risks. If a form is edited, who can see the new version? How can staff tell whether an approval is complete? What should happen if two people update information at different times? Poorly handled answers could leave staff relying on incomplete or outdated details.
 
-However, improving efficiency also meant considering how sensitive information would be stored and protected.
+Both internship projects also involved caution around cloud hosting and protecting patient information. This concern was understandable in the context of the **May 2021 HSE ransomware attack**, which disrupted health services and was later examined in an independent review [6]. Offline applications and private on-premises hosting were important options in discussions around these projects.
 
-Both projects faced concerns around cloud hosting and data security. These concerns were particularly understandable given the ransomware attack on Ireland's HSE in May 2021, which significantly disrupted healthcare services (Health Service Executive, 2021).
+However, **cloud is not automatically unsafe, and offline or on-premises systems are not automatically safe**. Cloud services still require careful assessment of access, provider responsibilities and continuity. On-premises systems require maintenance, patching and recovery arrangements. Offline-first workflows can keep parts of a service usable when connectivity fails, but may introduce risks from local storage and conflicting updates.
 
-Offline applications and privately hosted on-premises systems were therefore considered important options. However, neither approach automatically guarantees security. Offline systems can create difficulties with updates and synchronisation, while on-premises hosting still requires maintenance, access controls and reliable backups.
+For a hospital, the ethical question is not simply *“Where should we host this?”* It is *“Which arrangement can we operate responsibly, protect appropriately and recover when something goes wrong?”* The answer depends on the hospital's actual needs, risk assessment and technical capacity.
 
-The ethical responsibility is to assess these trade-offs rather than simply choosing the quickest or easiest technical solution.
+### What these projects taught me
 
-Interactive Activity 2 – The Healthcare Hosting Dilemma
+The bedside tablet made me think about **who should see information**. GyneConnect made me think about **whether information stays accurate, secure and usable throughout a workflow**. Both showed me why listening to healthcare staff matters, but also why software teams need to consider patients and other affected people who might not be in the room when requirements are discussed.
 
-Based on: GyneConnect – Gynaecological Surgery Pre-Assessment Application
-Format: Branching decision-making simulator
+## Exercise
 
-Scenario
+### The Busy-Ward Authentication Dilemma
 
-You're developing a hospital pre-assessment application to replace slow paper-based documentation. The hospital wants a more efficient system but is concerned about sensitive patient information, cybersecurity and system availability, particularly following the 2021 HSE cyberattack.
+**Scenario (fictional):** Your team is testing a bedside application. A hospital manager asks you to remove the sign-in step because staff say it slows them down during busy shifts. You understand the frustration: delays can interfere with work. But the tablet may be visible to people who are not authorised to see private patient information.
 
-How It Works
+**Your task:** Write a short recommendation to the team. Address the following questions:
 
-The reader chooses between three hosting approaches:
+1. **Who is affected?** Consider the patient, clinical staff, visitors and the organisation.
+2. **What are the competing duties?** Explain the case for quick access *and* the case for confidentiality and safety.
+3. **What would you propose?** Could a faster authorised sign-in, different information views, an unattended-screen lock or another approved approach reduce both risks?
+4. **How would you test it?** Who should be consulted, and what evidence would show that the solution works in a busy ward?
 
-Cloud Hosting: Managed infrastructure, but requires assessment of provider security, data protection and connectivity.
+**Compare your thinking with this example response:** Rather than removing authentication for everyone, I would first observe the workflow with staff and involve the hospital's clinical and information-governance teams. I would explore a quicker approved sign-in method and limit what remains visible on an unattended screen. I would then test whether authorised staff can retrieve necessary information promptly without increasing inappropriate access. I would document any remaining risks and seek the appropriate approval before release.
 
-On-Premises Hosting: Greater direct infrastructure control, but requires internal maintenance, backups and security management.
+This is **one defensible response, not the only correct answer**. The aim is to explain your reasoning and avoid treating patient privacy and staff usability as an either/or choice.
 
-Offline-First: Can operate without continuous connectivity, but introduces local data storage and synchronisation risks.
+## Interactive Element (optional)
 
-After choosing, the reader encounters an unexpected problem specific to their decision.
+### Activity 1 — Who Should Have Access?
 
-They select how to respond and receive feedback explaining the technical and ethical consequences.
+**Try the bedside tablet challenge.** Choose a role—**doctor, nurse, catering staff or visitor**—then select which categories of fictional patient information that person should be allowed to view. Submit your choices to receive feedback explaining what may be needed for safe care and what could unnecessarily expose private information.
 
-Example Interaction
+**Example:** You select *catering staff* and allow access to dietary requirements **and** the patient's full medical history. Feedback explains that allergy information can be important for meal safety, but unrelated medical details should not normally be disclosed. Try a different role to see why the answer changes with the task and circumstances. These are educational scenarios, not real hospital access rules.
 
-Selected approach: Offline-First
+### Activity 2 — The Healthcare Hosting Dilemma
 
-Unexpected problem: Two hospital staff members update the same patient's assessment while one device is offline, creating conflicting records.
+**Make a deployment decision for a fictional hospital pre-assessment system.** Choose **managed cloud hosting, private on-premises hosting or an offline-first approach**. You then face a complication associated with your choice and decide how to respond.
 
-What should the system do?
+**Example:** You choose *offline-first*. Two staff members make different updates while one device is disconnected. Should the system silently overwrite one record, ignore the conflict, or flag it for authorised review? Feedback explains why protecting the accuracy of clinical information matters alongside confidentiality and availability.
 
-A. Automatically overwrite the older record.
-B. Flag the conflicting changes for an authorised staff member to review.
-C. Keep both records without notifying anyone.
+There is **no universally safest hosting option**. The challenge is to recognise the trade-offs, respond to a realistic problem and identify safeguards that make your recommendation responsible.
 
-Recommended response: B.
+## Additional Resources
 
-Feedback:
+### Practical questions to take into your next software project
 
-"Flagging the conflict allows the changes to be reviewed without silently losing potentially important medical information. Automatically overwriting records could affect patient safety."
+Before a team commits to a feature or architecture, ask:
 
-Key learning: No hosting option is automatically the safest. Ethical engineering involves balancing confidentiality, availability, reliability and maintainability.
+- **Purpose:** What specific patient or staff need are we solving?
+- **Access:** Who genuinely needs each category of information, and why?
+- **Harm:** What could happen if information is exposed, incorrect or unavailable?
+- **Inclusion:** Can people with different needs actually use the service?
+- **Accountability:** Who will review the risks, approve decisions and maintain the safeguards?
 
-Web Team – Implementation
+**The key takeaway:** Building software that makes someone's job easier is valuable. Building software that people can trust—and that stays safe when real-world conditions are messy—is just as important.
 
-Display three selectable hosting cards with icons.
+### References (IEEE)
 
-Each selection opens a different predefined problem with three response options.
+[1] Association for Computing Machinery, “ACM Code of Ethics and Professional Conduct,” 2018. [Online]. Available: https://www.acm.org/code-of-ethics. [Accessed: Nov. 26, 2026].
 
-Show immediate feedback explaining the consequences.
+[2] Data Protection Commission, “Data Protection by Design and by Default.” [Online]. Available: https://www.dataprotection.ie/en/organisations/know-your-obligations/data-protection-design-and-default. [Accessed: Nov. 26, 2026].
 
-Allow readers to try different hosting approaches.
+[3] Data Protection Commission, “Data Security Guidance.” [Online]. Available: https://www.dataprotection.ie/en/organisations/know-your-obligations/data-security-guidance. [Accessed: Nov. 26, 2026].
 
-Use a simple React component with scenario data stored in a JavaScript object. No backend or real patient data is required.
+[4] European Parliament and Council of the European Union, “Regulation (EU) 2016/679 (General Data Protection Regulation),” *Official Journal of the European Union*, vol. L119, pp. 1–88, 2016. [Online]. Available: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng. [Accessed: Nov. 26, 2026].
 
+[5] World Wide Web Consortium, “Web Content Accessibility Guidelines (WCAG) 2.2,” W3C Recommendation, Oct. 5, 2023. [Online]. Available: https://www.w3.org/TR/WCAG22/. [Accessed: Nov. 26, 2026].
 
-The Responsibility of a Software Engineer
-
-Ethics is not just about following regulations. It also involves asking whether a solution is fair, necessary and safe for the people affected by it.
-
-A useful approach is to consider both the likely consequences of a decision and the professional duties involved. For healthcare software, this means asking who benefits, who might be harmed and what safeguards are needed before deployment.
-
-The key takeaway: Building software that makes someone's job easier is valuable, but building software that people can trust is equally important.
-
-References
-
-Association for Computing Machinery (2018) ACM code of ethics and professional conduct, available: https://www.acm.org/code-of-ethics [accessed 19 November 2026].
-
-Data Protection Commission (n.d.) Data protection by design and by default, available: https://dataprotection.ie/en/organisations/know-your-obligations/data-protection-design-and-default [accessed 19 November 2026].
-
-Health Service Executive (2021) Conti cyber attack on the HSE: independent post incident review, available: https://about.hse.ie/publications/conti-cyber-attack-on-the-hse-independent-post-incident-review/ [accessed 19 November 2026].
+[6] Health Service Executive, *Conti cyber attack on the HSE – Independent post incident review*, Dec. 2021. [Online]. Available: https://about.hse.ie/publications/conti-cyber-attack-on-the-hse-independent-post-incident-review/. [Accessed: Nov. 26, 2026].
